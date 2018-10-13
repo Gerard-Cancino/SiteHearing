@@ -1,4 +1,5 @@
 import requests
+import wikipedia
 
 S = requests.Session()
 
@@ -32,5 +33,5 @@ for place in PLACES:
     print(place['title'], place['dist']*.00621)
     place_list.append(place['title'])
 
-
+print(wikipedia.summary(place_list[0], sentences = 3))
 
