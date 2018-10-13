@@ -92,4 +92,10 @@ def places_at(request, coords):
             audio_uri = request.build_absolute_uri(settings.MEDIA_URL + audiofilename)
             places_dict[title] = Place(title, summary, audio_uri)
 
-    return Response({"audio": places_dict[list(places_dict)[0]].audio_uri})
+    result = places_dict[list(places_dict)[0]]
+
+    return Response({
+        "title": result.title,
+        "summary": result.summary,
+        "audio": result.audio_uri,
+    })

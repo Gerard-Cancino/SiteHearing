@@ -124,7 +124,8 @@ Zepto(function($){
     xhr = $.ajax({
       url: "http://" + window.location.host + "{% url 'places-at' 'coords' %}".replace("coords", param),
       success: function (data) {
-        var a = document.createElement("audio");
+        $("#place_title").text(data.title);
+        $("#place_summary").text(data.summary);
         $("#read_desc").attr("src", data.audio);
       }
     });
