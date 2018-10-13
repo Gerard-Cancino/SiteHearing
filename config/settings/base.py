@@ -70,10 +70,12 @@ DJANGO_APPS = (
 
 THIRD_PARTY_APPS = (
     'rest_framework',
+    'django_extensions',
 )
 
 LOCAL_APPS = (
     'project.api',
+    'project.frontend',
 )
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

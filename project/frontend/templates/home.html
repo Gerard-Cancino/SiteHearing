@@ -1,8 +1,9 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <link rel="stylesheet" href="../static/css/bootstrap.css">
-  <link rel="stylesheet" href="../static/css/style.css">
+  {% load static %}
+  <link rel="stylesheet" href="{% static "css/bootstrap.css" %}">
+  <link rel="stylesheet" href="{% static "css/style.css" %}">
   <!-- HERE Scripts -->
   <script src="http://js.api.here.com/v3/3.0/mapsjs-core.js"
   type="text/javascript" charset="utf-8"></script>
@@ -35,8 +36,9 @@
       <div class="row col-lg-10 offset-lg-1">
         <div id="mapContainer" style="height:600px;" class="col-lg-6"></div>
         <div id="description" class="col-lg-6">
-          <h2>Placeholder for Name</h2>
-          <p>Placeholder for description</p>
+          <h2 id="place_title">Placeholder for Name</h2>
+          <p id="place_summary">Placeholder for description</p>
+          <audio id="read_desc" controls></audio>
         </div>
       </div>
     </div>
@@ -46,9 +48,9 @@
   <div class="row col-md-12">
     <div class="row col-md-10 offset-md-1">
       <div class="row col-md-10 offset-md-1">
-      <img class="col-md-4" src="../static/images/1.jpg" alt="image 1">
-      <img class="col-md-4" src="../static/images/2.jpg" alt="image 2">
-      <img class="col-md-4" src="../static/images/3.jpg" alt="image 3">
+      <img class="col-md-4" src="{% static "images/1.jpg" %}" alt="image 1">
+      <img class="col-md-4" src="{% static "images/2.jpg" %}" alt="image 2">
+      <img class="col-md-4" src="{% static "images/3.jpg" %}" alt="image 3">
     </div>
   </div>
 </section>
@@ -57,10 +59,10 @@
   <h1>Powered By</h1>
   <div class="row col-md-12">
     <div class="row col-md-6 offset-md-3">
-      <img class="col-md-3 " src="../static/images/cloud-logo.png" alt="image 1">
-      <img class="col-md-3" src="../static/images/wiki-logo.png" alt="image 2">
-      <img class="col-md-3" src="../static/images/here-logo.png" alt="image 3">
-      <img class="col-md-3" src="../static/images/domain-logo.png" alt="image 4">
+      <img class="col-md-3 " src="{% static "images/cloud-logo.png" %}" alt="image 1">
+      <img class="col-md-3" src="{% static "images/wiki-logo.png" %}" alt="image 2">
+      <img class="col-md-3" src="{% static "images/here-logo.png" %}" alt="image 3">
+      <img class="col-md-3" src="{% static "images/domain-logo.png" %}" alt="image 4">
     </div>
   </div>
 </section>
@@ -69,10 +71,10 @@
   <h1>Programmed With</h1>
   <div class="row col-md-12">
     <div class="row col-md-6 offset-md-3">
-      <img class="col-md-2 " src="../static/images/python-logo.png" alt="image 1">
-      <img class="col-md-2" src="../static/images/django-logo.png" alt="image 2">
-      <img class="col-md-6" src="../static/images/web-logo.png" alt="image 3">
-      <img class="col-md-2" src="../static/images/bootstrap-logo.png" alt="image 4">
+      <img class="col-md-2 " src="{% static "images/python-logo.png" %}" alt="image 1">
+      <img class="col-md-2" src="{% static "images/django-logo.png" %}" alt="image 2">
+      <img class="col-md-6" src="{% static "images/web-logo.png" %}" alt="image 3">
+      <img class="col-md-2" src="{% static "images/bootstrap-logo.png" %}" alt="image 4">
     </div>
   </div>
 </section>
@@ -96,8 +98,11 @@
   </div>
 </footer>
 
-<script src="../static/js/bootstrap.min.js"></script>
+<script src="{% static "js/bootstrap.min.js" %}"></script>
+<script src="{% static "js/zepto.js" %}"></script>
 <script type="text/javascript">
+Zepto(function($){
+
   // Mozilla Geolocation
   // https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API
   navigatorObject = window.navigator;
@@ -110,10 +115,19 @@
 
 
   function getPosition(position){
-    coordinates = position.coords;
-    latitude = coordinates.latitude;
-    longitude = coordinates.longitude;
+    var coordinates = position.coords;
+    var latitude = coordinates.latitude;
+    var longitude = coordinates.longitude;
     createMap(latitude,longitude);
+    var param = latitude + "|" + longitude;
+    console.log(param);
+    xhr = $.ajax({
+      url: "http://" + window.location.host + "{% url 'places-at' 'coords' %}".replace("coords", param),
+      success: function (data) {
+        var a = document.createElement("audio");
+        $("#read_desc").attr("src", data.audio);
+      }
+    });
   }
   function createMap(latitude, longitude){
     //API Key // Ask yufan for security
@@ -134,14 +148,14 @@
         zoom: 15,
         center: { lat: latitude, lng: longitude }
     });
-    var icon = new H.map.Icon('../static/images/map-mark.png');
+    var icon = new H.map.Icon('{% static "images/map-mark.png" %}');
     var marker = new H.map.Marker({ lat: latitude, lng: longitude }, { icon: icon });
     // Set map center and zoom, add the marker to the map:
     map.addObject(marker);
   }
 
   function addMarker(latitude, longitude) {
-    var icon = new H.map.Icon('../static/images/map-pin.png');
+    var icon = new H.map.Icon('{% static "images/map-pin.png" %}');
     var marker = new H.map.Marker({ lat: latitude, lng: longitude }, { icon: icon });
     // Set map center and zoom, add the marker to the map:
 
@@ -151,6 +165,8 @@
   function repeatSearch(){
 
   }
+
+});
 
 
 

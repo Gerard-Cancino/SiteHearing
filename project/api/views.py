@@ -20,17 +20,17 @@ class Place:
 places_dict = {}
 
 @api_view()
-def places_at(request):
+def places_at(request, coords):
     import requests
     import wikipedia
     from django.conf import settings
     from uuid import uuid4
     from rest_framework.reverse import reverse_lazy
 
-    coords = request.query_params["coords"]
-
-    if coords == "":
-        return Response(status=400)
+    # coords = request.query_params["coords"]
+    #
+    # if coords == "":
+    #     return Response(status=400)
 
     s = requests.Session()
 
@@ -52,6 +52,7 @@ def places_at(request):
     }
 
     data = s.get(url=url, params=params).json()
+    print(data)
 
     places = data['query']['geosearch']
 
