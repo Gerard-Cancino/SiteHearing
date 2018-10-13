@@ -4,7 +4,7 @@ S = requests.Session()
 
 URL  = "https://en.wikipedia.org/w/api.php"
 
-miles = 5
+miles = 2
 radius = int(miles/.00621) #in meters
 #COORDS = '37.7891838|-122.4033522'
 COORDS = '40.7281|-73.9916'
@@ -12,13 +12,12 @@ PARAMS = {
     'action':"query",
     'list':"geosearch",
     'gscoord': COORDS,
-    'gsradius': "10000",
-	"gsmaxdim": "20000",
-	"gsglobe": "earth",
+    'gsradius': radius,
+    'gsglobe': "earth",
     'gslimit':10,
     'format':"json",
-	"gsprop": "type",
-	"gsprimary": "primary",
+    "gsprop": "type",
+    "gsprimary": "primary",
     'type':"landmark"
 }
 
@@ -29,8 +28,8 @@ PLACES = DATA['query']['geosearch']
 print(COORDS)
 place_list = []
 for place in PLACES:
-    print("loop entered")
-    print(place['title'], place['dist'], place['lat'], place['lon'])
+   
+    print(place['title'], place['dist']*.00621)
 #    place_list.append(place['title'])
 
 
