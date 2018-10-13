@@ -61,6 +61,6 @@ for place in PLACES:
     print(place['title'], place['dist']*.00621)
     place_list.append(place['title'])
 
-x = wikipedia.summary(place_list[0], sentences = 3)
+x = wikipedia.summary(place_list[4], sentences = 3)
 print(x)
 synthesize_text(x)
