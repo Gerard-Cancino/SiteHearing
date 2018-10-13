@@ -4,6 +4,7 @@ from project.api.serializers import UserSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+
 class UserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
@@ -11,13 +12,6 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-class Place:
-    def __init__(self, title, summary, audio_uri):
-        self.title = title
-        self.summary = summary
-        self.audio_uri = audio_uri
-
-places_dict = {}
 
 @api_view()
 def places_at(request, coords):
@@ -25,7 +19,6 @@ def places_at(request, coords):
     import wikipedia
     from django.conf import settings
     from uuid import uuid4
-    from rest_framework.reverse import reverse_lazy
 
     # coords = request.query_params["coords"]
     #
@@ -80,6 +73,8 @@ def places_at(request, coords):
         with path.open('wb') as out:
             out.write(response.audio_content)
 
+    places_dict = {}
+
     for place in places:
         if place["title"] in places_dict.keys():
             continue
@@ -90,12 +85,11 @@ def places_at(request, coords):
             audiofilepath = settings.MEDIA_ROOT / audiofilename
             to_speech(summary, audiofilepath)
             audio_uri = request.build_absolute_uri(settings.MEDIA_URL + audiofilename)
-            places_dict[title] = Place(title, summary, audio_uri)
+            places_dict[title] = {
+                "title": title,
+                "summary": summary,
+                "audio": audio_uri,
+            }
 
-    result = places_dict[list(places_dict)[0]]
+    return Response(places_dict.values())
 
-    return Response({
-        "title": result.title,
-        "summary": result.summary,
-        "audio": result.audio_uri,
-    })

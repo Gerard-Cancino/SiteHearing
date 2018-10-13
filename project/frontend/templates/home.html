@@ -27,6 +27,9 @@
       <a id="pause-btn" href="#">
         Pause
       </a>
+      <a id="next-btn" href="#">
+        Next
+      </a>
     </div>
     <div class="col-sm-1"></div>
   </div>
@@ -115,6 +118,8 @@ Zepto(function($){
   })
 
   var audio = $("#read_desc").get(0);
+  var index = 0;
+  var places = [];
 
   $("#play-btn").on('click', function(ev) {
     audio.play();
@@ -124,6 +129,17 @@ Zepto(function($){
     audio.pause();
   });
 
+  $("#next-btn").on('click', function(ev) {
+    index += 1;
+    if (index >= places.length) {
+      index = 0;
+    }
+    var data = places[index];
+    $("#place_title").text(data.title);
+    $("#place_summary").text(data.summary);
+    $("#read_desc").attr("src", data.audio);
+  });
+
   function getPosition(position){
     var coordinates = position.coords;
     var latitude = coordinates.latitude;
@@ -131,9 +147,12 @@ Zepto(function($){
     createMap(latitude,longitude);
     var param = latitude + "|" + longitude;
     console.log(param);
-    xhr = $.ajax({
+    var xhr = $.ajax({
       url: "http://" + window.location.host + "{% url 'places-at' 'coords' %}".replace("coords", param),
       success: function (data) {
+        places = data;
+        index = 0;
+        var data = places[index];
         $("#place_title").text(data.title);
         $("#place_summary").text(data.summary);
         $("#read_desc").attr("src", data.audio);
