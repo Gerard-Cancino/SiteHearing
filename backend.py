@@ -26,12 +26,11 @@ DATA = R.json()
 
 PLACES = DATA['query']['geosearch']
 print(COORDS)
+
 place_list = []
-for place in PLACES:
-   
+for place in PLACES:   
     print(place['title'], place['dist']*.00621)
-#    place_list.append(place['title'])
+    place_list.append(place['title'])
 
 
-#print(place_list[0])
 
