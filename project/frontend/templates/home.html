@@ -20,10 +20,10 @@
       <h1>SiteHearing</h1>
     </div>
     <div id="header-right" class="col-sm-5">
-      <a href="">
+      <a id="play-btn" href="#">
         Play
       </a>
-      <a href="">
+      <a id="pause-btn" href="#">
         Pause
       </a>
     </div>
@@ -113,6 +113,15 @@ Zepto(function($){
     getPosition(position);
   })
 
+  var audio = $("#read_desc").get(0);
+
+  $("#play-btn").on('click', function(ev) {
+    audio.play();
+  });
+
+  $("#pause-btn").on('click', function(ev) {
+    audio.pause();
+  });
 
   function getPosition(position){
     var coordinates = position.coords;
