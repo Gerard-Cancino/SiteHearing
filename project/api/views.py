@@ -11,6 +11,13 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
+class Place:
+    def __init__(self, title, summary, audio_uri):
+        self.title = title
+        self.summary = summary
+        self.audio_uri = audio_uri
+
+places_dict = {}
 
 @api_view()
 def places_at(request):
@@ -47,7 +54,6 @@ def places_at(request):
     data = s.get(url=url, params=params).json()
 
     places = data['query']['geosearch']
-    summary = wikipedia.summary(places[4]["title"], sentences=3)
 
     def to_speech(text, path):
         """Synthesizes speech from the input string of text."""
@@ -73,8 +79,16 @@ def places_at(request):
         with path.open('wb') as out:
             out.write(response.audio_content)
 
-    audiofilename = str(uuid4()) + ".mp3"
-    audiofilepath = settings.MEDIA_ROOT / audiofilename
-    to_speech(summary, audiofilepath)
+    for place in places:
+        if place["title"] in places_dict.keys():
+            continue
+        else:
+            title = place["title"]
+            summary = wikipedia.summary(place["title"], sentences=3)
+            audiofilename = str(uuid4()) + ".mp3"
+            audiofilepath = settings.MEDIA_ROOT / audiofilename
+            to_speech(summary, audiofilepath)
+            audio_uri = request.build_absolute_uri(settings.MEDIA_URL + audiofilename)
+            places_dict[title] = Place(title, summary, audio_uri)
 
-    return Response({"audio": request.build_absolute_uri(settings.MEDIA_URL + audiofilename)})
+    return Response({"audio": places_dict[list(places_dict)[0]].audio_uri})
