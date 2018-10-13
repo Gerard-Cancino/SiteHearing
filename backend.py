@@ -7,14 +7,19 @@ URL  = "https://en.wikipedia.org/w/api.php"
 miles = 5
 radius = int(miles/.00621) #in meters
 #COORDS = '37.7891838|-122.4033522'
-COORDS = '40.7281|73.9916'
+COORDS = '40.7281|-73.9916'
 PARAMS = {
     'action':"query",
     'list':"geosearch",
     'gscoord': COORDS,
-    'gsradius':radius,
+    'gsradius': "10000",
+	"gsmaxdim": "20000",
+	"gsglobe": "earth",
     'gslimit':10,
-    'format':"json"
+    'format':"json",
+	"gsprop": "type",
+	"gsprimary": "primary",
+    'type':"landmark"
 }
 
 R = S.get(url=URL, params=PARAMS)
