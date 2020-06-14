@@ -1,5 +1,5 @@
 # SiteHearing
-  Scans a tourists location and provides a museum-like tour of the area via a human-like verbalization using Python, Javascript, HTML,CSS
+  A web application that scan's a tourist location and provides a tour of landmarks of the area via a human-like verbalization.
 ## Reference
 
 - [Modern Django — Part 0: Introduction and Initial Setup](https://medium.com/@djstein/modern-django-part-0-introduction-and-initial-setup-657df48f08f8#.4owytgd86)
